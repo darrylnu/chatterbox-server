@@ -28,13 +28,18 @@ exports.requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
 
+
+
+
+
+
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
   var statusCode = 200;
-
   // See the note below about CORS headers.
   var headers = exports.defaultCorsHeaders;
+  
 
   // Tell the client we are sending them plain text.
   // console.log('this is /send', /send);
@@ -42,7 +47,18 @@ exports.requestHandler = function(request, response) {
   // other than plain text, like JSON or HTML.
   headers['Content-Type'] = 'application/json';
   // console.log('this is the headers.', JSON.stringify(request.headers));
-
+  console.log('this is request', request.method);
+    // if(request.method === "POST"){
+    //   statusCode = 201;
+    //   response.writeHead(statusCode, headers);
+    //   response.end();
+    // }
+    // if(request.method === "GET" && (request.url === "/classes/room" || request.url === "classes/room1" || '/classes/messages')){
+    //   statusCode = 200;
+    // }
+    // else{
+    //   statusCode = 404;
+    // }
   // console.log('this is a request', request);
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers
@@ -51,10 +67,15 @@ exports.requestHandler = function(request, response) {
  // headers = JSON.stringify(headers);
 
   response.writeHead(statusCode, headers);
-  console.log('this is methods',request.method)
-if(request.method === 'POST'){
-  request.url = "/classes/room";
-}
+  // console.log('this is methods',request.method)
+    // if(request.url ==){
+    //   statusCode = 404;
+    //   response.writeHead(statusCode, headers);
+    //   response.end();
+    // }
+
+
+console.log('this is url',request.url);
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
