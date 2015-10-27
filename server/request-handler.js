@@ -37,18 +37,24 @@ exports.requestHandler = function(request, response) {
   var headers = exports.defaultCorsHeaders;
 
   // Tell the client we are sending them plain text.
-  //
+  // console.log('this is /send', /send);
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = 'application/json';
+  // console.log('this is the headers.', JSON.stringify(request.headers));
 
   // console.log('this is a request', request);
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers
-  console.log('parser', request.parser);
-  response.writeHead(statusCode, headers);
-  
+  // console.log('is this a post', response.method);
 
+ // headers = JSON.stringify(headers);
+
+  response.writeHead(statusCode, headers);
+  console.log('this is methods',request.method)
+if(request.method === 'POST'){
+  request.url = "/classes/room";
+}
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -56,7 +62,7 @@ exports.requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end("Hello, World!");
+  response.end(JSON.stringify({results :[]}));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
