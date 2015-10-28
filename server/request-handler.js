@@ -1,3 +1,10 @@
+var headers = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "content-type, accept",
+  "access-control-max-age": 10, // Seconds.
+  "Content-Type":"application/json"
+};
 /*************************************************************
 
 You should implement your request handler function in this file.
@@ -11,8 +18,36 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var sendResponse = function(response, data, statusCode){
+  statusCode = statusCode || 200;
+  response.writeHead(statusCode, headers);
+  response.end(JSON.stringify(data));
+};
+
+var messages = [{
+  text: 'hello world',
+  username: 'carine'
+}];
+
+var collectData = function(request){
+  var data = "";
+  request.on('data', function(chunk){
+    data = chunk + data;
+  })
+}
 var exports = module.exports = {};
 exports.requestHandler = function(request, response) {
+  var statusCode = 200;
+  if(request.method === "GET"){
+    sendResponse(response, {results: messages})
+  }else if(request.method === "POST"){
+      var messages = collectData(request);
+      statusCode = 201;
+      sendResponse(request);
+    } else if (request.method === "OPTIONS"){
+      sendResponse(response);
+    }
+console.log('this is response',response)
   // Request and Response come from node's http module.
   //
   // They include information about both the incoming request, such as
@@ -32,27 +67,21 @@ exports.requestHandler = function(request, response) {
 
 
 
-
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   // The outgoing status.
-  var statusCode = 200;
   // See the note below about CORS headers.
-  var headers = exports.defaultCorsHeaders;
+
   
 
   // Tell the client we are sending them plain text.
   // console.log('this is /send', /send);
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = 'application/json';
+
   // console.log('this is the headers.', JSON.stringify(request.headers));
-  console.log('this is request', request.method);
-    // if(request.method === "POST"){
-    //   statusCode = 201;
-    //   response.writeHead(statusCode, headers);
-    //   response.end();
-    // }
+ 
+
     // if(request.method === "GET" && (request.url === "/classes/room" || request.url === "classes/room1" || '/classes/messages')){
     //   statusCode = 200;
     // }
@@ -66,7 +95,7 @@ exports.requestHandler = function(request, response) {
 
  // headers = JSON.stringify(headers);
 
-  response.writeHead(statusCode, headers);
+  // response.writeHead(statusCode, headers);
   // console.log('this is methods',request.method)
     // if(request.url ==){
     //   statusCode = 404;
@@ -75,7 +104,7 @@ exports.requestHandler = function(request, response) {
     // }
 
 
-console.log('this is url',request.url);
+
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
@@ -83,7 +112,6 @@ console.log('this is url',request.url);
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end(JSON.stringify({results :[]}));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -95,11 +123,5 @@ console.log('this is url',request.url);
 //
 // Another way to get around this restriction is to serve you chat
 // client from this domain by setting up static file serving.
-exports.defaultCorsHeaders = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "access-control-allow-headers": "content-type, accept",
-  "access-control-max-age": 10 // Seconds.
-};
 
 
